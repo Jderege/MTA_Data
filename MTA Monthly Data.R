@@ -2,7 +2,7 @@ library(fpp3)
 library(tidyverse)
 
 
-MTA <- readr::read_csv("/Users/jderege/Documents/2025/Spring 2025/MTH 260/Project/CSVs/MTA_Monthly_Ridership___Traffic_Data__Beginning_January_2008.csv")
+MTA <- readr::read_csv("MTA_Monthly_Ridership___Traffic_Data__Beginning_January_2008.csv")
 MTAts <- MTA |> 
   mutate(Month = yearmonth(Month)) |> 
   as_tsibble(key = Agency, index = Month)
