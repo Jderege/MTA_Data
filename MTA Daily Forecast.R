@@ -2,7 +2,7 @@ library(fpp3)
 library(tidyverse)
 library(lubridate)
 
-MTAdaily <- readr::read_csv("/Users/jderege/tmp/MTA_Daily_Ridership_and_Traffic__Beginning_2020_20250430.csv")
+MTAdaily <- readr::read_csv("MTA_Daily_Ridership_and_Traffic__Beginning_2020_20250430.csv")
 
 MTAdaily |>
   mutate(Date = mdy(Date))|>
