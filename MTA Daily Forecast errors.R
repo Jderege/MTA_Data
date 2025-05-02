@@ -33,3 +33,22 @@ subway_fc |>
   geom_line(aes(x = Date, y = Count),filter_index(subway_daily, "2024" ~ .))
 
 accuracy(subway_fc, subway_daily)
+
+subway_fc |>
+  filter(.model == "trend_model") |>
+  autoplot(bind_rows(subway_train,subway_test))
+
+subway_fc |> 
+  filter(.model == "trend_model", Date == "2025-02-01") |>
+  accuracy(subway_daily, list(qs = quantile_score), probs = 0.90)
+
+subway_fc |> 
+  filter(.model == "trend_model", Date == "2025-02-01") |>
+  accuracy(subway_daily, list(winkler = winkler_score), level = 80)
+
+subway_fc |>
+  accuracy(subway_daily, list(crps = CRPS))
+
+subway_fc |>
+  accuracy(subway_daily, list(skill = skill_score(CRPS)))
+
