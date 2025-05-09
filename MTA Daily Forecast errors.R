@@ -13,6 +13,8 @@ subway_daily <- MTADailyts |> filter(Mode == "Subway") |> filter_index("2020-04-
 
 subway_train <- subway_daily |> filter_index(. ~ "2024")
 
+subway_test <- subway_daily |> filter_index("2025")
+
 subway_fit <- subway_train |> 
   model(
     Mean = MEAN(Count),
@@ -31,6 +33,28 @@ subway_fc |>
 subway_fc |>
   autoplot() +
   geom_line(aes(x = Date, y = Count),filter_index(subway_daily, "2024" ~ .))
+
+subway_train |>
+  ggplot(aes(x = Date, y = Count)) +
+  geom_line(aes(x = Date, y = Count),filter(subway_test),color = "grey") +
+  geom_line(aes(x = Date, y = .mean),filter(subway_fc,.model == "SNaive"),color = "green") +
+  geom_line(aes(x = Date, y = Count), filter_index(subway_train, "2024" ~ .)) + 
+  geom_line(aes(x = Date, y = .mean),filter(subway_fc,.model == "Mean"),color = "red") +
+  geom_line(aes(x = Date, y = .mean),filter(subway_fc,.model == "Naive"),color = "blue") +
+  geom_line(aes(x = Date, y = .mean),filter(subway_fc,.model == "Drift"),color = "orange") +
+  guides(color = guide_legend(title = "Forecasts"))
+
+subway_train |>
+  ggplot(aes(x = Date, y = Count)) +
+  geom_line(aes(x = Date, y = Count),filter(subway_test),color = "grey") +
+  geom_line(aes(x = Date, y = .mean),filter(subway_fc,.model == "trend_model"),color = "green") +
+  geom_line(aes(x = Date, y = Count), filter_index(subway_train, "2024" ~ .)) 
+
+subway_fc |>
+  filter(.model == "trend_model") |>
+  autoplot() +
+  autolayer(subway_test, color = "grey") +
+  geom_line(aes(x = Date, y = Count),filter_index(subway_train,"2024" ~ .))
 
 accuracy(subway_fc, subway_daily)
 
